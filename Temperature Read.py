@@ -18,7 +18,7 @@ REGISTER   = '4700'
 FUNC_CODE  = '03'  # 03 = Read Holding Registers
 NUM_REGS   = '0001'
 SCALE      = 10    # CN740 scales values by x10
-INTERVAL   = 1
+INTERVAL   = 60
 
 #BUILD FRAME
 data = SLAVE_ID + FUNC_CODE + REGISTER + NUM_REGS
@@ -35,12 +35,12 @@ FILE_PATH = os.path.join(BASE_DIR, "Temp_Test.txt")
 
 
 if not os.path.exists(FILE_PATH):
-    with open(FILE_PATH, "w") as f:
-        f.write("Timestamp, Temperature / °C")
+    with open(FILE_PATH, "w") as f:                 #"w" 
+        f.write("Timestamp, Temperature / °C\n")
 
 count = 0
 try:    
-    while count <= 5:
+    while count <= 100:
         count += 1
     #print(count, "count")
         with serial.Serial(COM_PORT, BAUD,  bytesize=7, parity='E', stopbits=1, timeout=1) as ser:
@@ -54,10 +54,10 @@ try:
             raw_value   = int(response[7:11], 16)               #16 as in Base-16. Hex. Index 7:11 contain temp information
             temperature = raw_value / SCALE
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-            
-            #print(f"Time: {timestamp}")
-            #print(f"Temperature: {temperature:.1f} °C")
-           
+            log_entry = f"{timestamp}, {temperature:.1f} °C"
+            #print(log_entry)
+            with open(FILE_PATH, "a") as f:             #"a" append to file
+                f.write(log_entry + "\n")
 except KeyboardInterrupt:
    print("\nLogging stopped by user")
            
