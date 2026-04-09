@@ -3,7 +3,7 @@ import serial
 
 
 # --- CONFIG ---
-COM_PORT   = 'COM3'
+COM_PORT   = 'COM13'
 BAUD       = 9600
 SLAVE_ID   = '01'
 REGISTER   = '4700'
